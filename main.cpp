@@ -1,4 +1,4 @@
-#include "Proxy.hpp"
+#include "Proxy/Proxy.hpp"
 
 void checkArgs(int argc, char **argv, int port)
 {
@@ -17,7 +17,7 @@ void checkArgs(int argc, char **argv, int port)
 	if (port < 1024 || port > 49151)
 	{
 		std::cout << "Wrong port!" << std::endl;
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 }
 
@@ -30,7 +30,7 @@ int main(int argc, char **argv)
 		string ip = argv[1];
 		int portBD = atoi(argv[2]);
 		if (proxyPort <= 0 || portBD <= 0)
-			throw std::runtime_error("Wrong ip\n");
+			throw string("Wrong ip");
 		Proxy serv(ip, proxyPort, portBD);
 		serv.socketPreparation();
 		serv.listenSock(128);
