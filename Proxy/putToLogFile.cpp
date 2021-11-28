@@ -4,7 +4,7 @@ char	*countTime()
 {
 	time_t cur;
 	cur = time(NULL);
-	return ctime(&now);
+	return ctime(&cur);
 }
 
 void	putToLogFile(char *packet)
@@ -20,7 +20,8 @@ void	putToLogFile(char *packet)
 	int pLen = int(int(packet[0]))
 			| int(packet[1]) << 8
 			| int(packet[2]) << 16;
-	string output = "*********\n" + date + "\n" + &packet[5] + "\n*********\n";
+	string output = "*********\n" + string(date) + "\n" + &packet[5] +
+			"\n*********\n";
 	write(fd, output.c_str(), output.length());
 	close(fd);
 }

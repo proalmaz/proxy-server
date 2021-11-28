@@ -18,12 +18,15 @@
 #include <sys/types.h>
 #include <arpa/inet.h>
 #include <signal.h>
+#include "../Client/Client.hpp"
 
 using std::cin;
 using std::string;
 using std::cout;
 using std::endl;
 using std::cerr;
+
+class Client;
 
 class Proxy
 {
@@ -35,9 +38,10 @@ private:
 	struct sockaddr_in		m_addr;
 	int 					m_addrlen;
 	int 					m_fd;
+	int 					m_max_fd;
 	fd_set					m_writeFds;
 	fd_set					m_readFds;
-	std::vector<Client>		m_clients;
+	std::vector<Client *>	m_clients;
 	Proxy();
 
 public:
@@ -48,6 +52,9 @@ public:
 	void 					socketPreparation();
 	void 					run();
 	void 					putFdSpace();
+	void 					deleteClient(Client *client);
+	void 					acceptNewClient();
+	void 					checkClientsFd();
 
 	int						getPort();
 	int 					getAddressLen();

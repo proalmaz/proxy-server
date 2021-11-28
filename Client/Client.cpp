@@ -11,8 +11,8 @@ Client::Client(string &DBAddress, int fd, int DBport) : m_DBAddress
 	if (m_DBFd < 0)
 		throw string("Error: socket of client failed");
 	m_opt = 1;
-	if (setsockopt(m_DBFd, SOL_SOCKET, &m_opt,
-				   (socklen_t)(sizeof (m_opt))) == -1)
+	if (setsockopt(m_DBFd, SOL_SOCKET, SO_REUSEADDR, &m_opt,
+				   (socklen_t)(sizeof(m_opt))) == -1)
 		throw string("Error: setsockopt of client failed");
 	m_addrlen = sizeof(m_addr);
 	m_addr.sin_family = AF_INET;
@@ -62,7 +62,7 @@ void Client::receiveFromClient()
 	{
 		m_status = CLOSE;
 		string error = "Error: receive from client failed: " +
-				strerror(string(errno));
+				string(strerror(errno));
 		throw error;
 	}
 	else if (!len)
@@ -72,6 +72,8 @@ void Client::receiveFromClient()
 		return;
 	}
 	m_reqLen = len;
+	// проверяет, является ли пакет командой COM_QUERY или COM_STMT_PREPARE
+	putToLogFile(m_request);
 	if (int(m_request[4]) == COM_STM_PREPARE || int(m_request[4]) == COM_QUERY)
 	{
 		try

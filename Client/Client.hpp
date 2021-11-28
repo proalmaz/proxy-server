@@ -10,6 +10,12 @@
 #define COM_QUERY 3
 #define COM_STM_PREPARE 22
 
+using std::cin;
+using std::string;
+using std::cout;
+using std::endl;
+using std::cerr;
+
 class Client
 {
 private:
