@@ -13,6 +13,7 @@
 #include <netinet/in.h>
 #include <fcntl.h>
 #include <vector>
+#include <ctime>
 #include <algorithm>
 #include <sys/types.h>
 #include <arpa/inet.h>
@@ -52,3 +53,5 @@ public:
 	int 					getAddressLen();
 	int 					getFd();
 };
+
+void						putToLogFile(char *packet);

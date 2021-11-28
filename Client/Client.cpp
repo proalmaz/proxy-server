@@ -54,3 +54,79 @@ int Client::getClientFd() { return m_clientFd; }
 
 int Client::getStatus() { return m_status; }
 
+void Client::receiveFromClient()
+{
+	bzero(m_request, BUFFSIZE);
+	int len = recv(m_clientFd, m_request, sizeof(m_request), 0);
+	if (len < 0)
+	{
+		m_status = CLOSE;
+		string error = "Error: receive from client failed: " +
+				strerror(string(errno));
+		throw error;
+	}
+	else if (!len)
+	{
+		m_status = CLOSE;
+		cout << "Connection with socket was closed" << endl;
+		return;
+	}
+	m_reqLen = len;
+	if (int(m_request[4]) == COM_STM_PREPARE || int(m_request[4]) == COM_QUERY)
+	{
+		try
+		{
+			putToLogFile(m_request);
+		}
+		catch (string &error)
+		{
+			cerr << error << endl;
+		}
+	}
+	m_status = SEND_TO_DB;
+}
+
+void Client::receiveFromDB()
+{
+	bzero(m_response, BUFFSIZE);
+	int len = recv(m_DBFd, m_response, sizeof(m_response), 0);
+	if (len < 0)
+	{
+		string error = "Error: receive from DB failed: " +
+				string(strerror(errno));
+		m_status = CLOSE;
+		throw error;
+	}
+	else if (len == 0)
+	{
+		cout << "Connection was closed" << endl;
+		m_status = CLOSE;
+		return;
+	}
+	m_resLen = len;
+	m_status = SEND_TO_CLIENT;
+}
+
+void Client::sendToDB()
+{
+	if (send(m_DBFd, m_request, m_reqLen, 0) < 0)
+	{
+		string error = "Error: send to DB failed: " +
+				string(strerror(errno));
+		m_status = CLOSE;
+		throw error;
+	}
+	m_status = READ_FROM_DB;
+}
+
+void Client::sendToClient()
+{
+	if (send(m_clientFd, m_response, m_resLen, 0) < 0)
+	{
+		string error = "Error: send to client failed: " +
+				string(strerror(errno));
+		m_status = CLOSE;
+		throw error;
+	}
+	m_status = READ_FROM_CLIENT;
+}

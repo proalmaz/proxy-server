@@ -7,6 +7,8 @@
 #define READ_FROM_DB 3
 #define CLOSE 4
 #define BUFFSIZE 100000
+#define COM_QUERY 3
+#define COM_STM_PREPARE 22
 
 class Client
 {
