@@ -72,7 +72,7 @@ void Client::receiveFromClient()
 		return;
 	}
 	m_reqLen = len;
-	// проверяет, является ли пакет командой COM_QUERY или COM_STMT_PREPARE
+	// проверяет, является ли пакет командой COM_QUERY или COM_STMT_PREPARE?
 	if (int(m_request[4]) == COM_STM_PREPARE || int(m_request[4]) == COM_QUERY)
 	{
 		try
