@@ -73,7 +73,6 @@ void Client::receiveFromClient()
 	}
 	m_reqLen = len;
 	// проверяет, является ли пакет командой COM_QUERY или COM_STMT_PREPARE
-	putToLogFile(m_request);
 	if (int(m_request[4]) == COM_STM_PREPARE || int(m_request[4]) == COM_QUERY)
 	{
 		try
