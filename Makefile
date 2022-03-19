@@ -5,7 +5,7 @@ SRC		=	main.cpp \
 			Proxy/Proxy.cpp \
 			Proxy/putToLogFile.cpp \
 
-CC		=	clang++ -std=c++17
+CC		=	g++ -std=c++17
 
 FLAGS	=
 

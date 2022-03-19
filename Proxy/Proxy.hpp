@@ -41,7 +41,9 @@ private:
 	int 					m_max_fd;
 	fd_set					m_writeFds;
 	fd_set					m_readFds;
-	std::vector<Client *>	m_clients;
+	std::vector<Client>     m_clients;
+    int                     m_clientFd;
+    int                     m_DBFd;
 	Proxy();
 
 public:
@@ -52,7 +54,6 @@ public:
 	void 					socketPreparation();
 	void 					run();
 	void 					putFdSpace();
-	void 					deleteClient(Client *client);
 	void 					acceptNewClient();
 	void 					checkClientsFd();
 
